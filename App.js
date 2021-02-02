@@ -1,57 +1,96 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+    createStackNavigator,
+    HeaderBackButton
+} from "@react-navigation/stack";
+import HomeScreen from "./src/screens/Home";
+import ChatHomeScreen from "./src/screens/ChatHome";
+import SettingsScreen from "./src/screens/Settings";
+import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, Platform } from "react-native";
+import { MenuProvider } from "react-native-popup-menu";
+import SettingsMenu from "./src/components/SettingsMenu";
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const App = () => {
-    return (
+const App = () => (
+    <MenuProvider>
         <NavigationContainer>
-            <Tab.Navigator initialRouteName="Home">
-                <Tab.Screen
+            <Stack.Navigator
+                headerMode="screen"
+                initialRouteName="ChatHome"
+                screenOptions={{
+                    cardOverlayEnabled: false,
+                    headerTitleAlign: "left",
+                    headerStyle: {
+                        backgroundColor: "rgb(0, 150, 136)",
+                        borderBottomWidth: 0
+                    },
+                    headerTitleStyle: {
+                        color: "white"
+                    },
+                    headerStatusBarHeight: Platform.OS === "web" ? 0 : 50
+                }}
+            >
+                <Stack.Screen
+                    name="ChatHome"
+                    component={ChatHomeScreen}
+                    options={{
+                        title: "Chat",
+                        headerRight: () => (
+                            <View style={styles.headerRight}>
+                                <Ionicons
+                                    name="md-search-sharp"
+                                    size={24}
+                                    color="white"
+                                    onPress={() => {}}
+                                    style={styles.icons}
+                                />
+                                <SettingsMenu />
+                            </View>
+                        )
+                    }}
+                />
+                <Stack.Screen
                     name="Home"
                     component={HomeScreen}
-                    options={{ tabBarLabel: "Home" }}
+                    options={{
+                        title: "Home"
+                    }}
                 />
-                <Tab.Screen
+                <Stack.Screen
                     name="Settings"
-                    component={SettingScreen}
-                    options={{ tabBarLabel: "Settings" }}
+                    component={SettingsScreen}
+                    options={{
+                        title: "Settings",
+                        headerLeft: (props) => (
+                            <HeaderBackButton
+                                {...props}
+                                onPress={() => {
+                                    // Do something
+                                }}
+                            />
+                        )
+                    }}
                 />
-            </Tab.Navigator>
+            </Stack.Navigator>
         </NavigationContainer>
-    );
-};
-
-const HomeScreen = () => {
-    return (
-        <View style={styles.container}>
-            <Text>Open up App.js to start working on your app! HomeScreen</Text>
-            <StatusBar style="light" />
-        </View>
-    );
-};
-
-const SettingScreen = () => {
-    return (
-        <View style={styles.container}>
-            <Text>
-                Open up App.js to start working on your app! SettingScreen
-            </Text>
-            <StatusBar style="dark" />
-        </View>
-    );
-};
+    </MenuProvider>
+);
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center"
+    headerRight: {
+        display: "flex",
+        flexDirection: "row",
+        width: 75,
+        justifyContent: "space-between",
+        paddingLeft: 5,
+        paddingRight: 5
+    },
+    icons: {
+        padding: 5
     }
 });
 
