@@ -3,12 +3,10 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { FontAwesome } from "@expo/vector-icons";
-
-const customRoutes = (name) => () => (
-    <View style={styles.scene}>
-        <Text>{name}</Text>
-    </View>
-);
+import ChatsTab from "../tabs/ChatsTab";
+import CallsTab from "../tabs/CallsTab";
+import StatusTab from "../tabs/StatusTab";
+import CameraTab from "../tabs/CameraTab";
 
 const initialLayout = { width: Dimensions.get("window").width };
 
@@ -28,10 +26,10 @@ const renderTabBar = (props) => (
 );
 
 const renderScene = SceneMap({
-    camera: customRoutes("camera"),
-    chats: customRoutes("chats"),
-    status: customRoutes("status"),
-    calls: customRoutes("calls")
+    camera: CameraTab,
+    chats: ChatsTab,
+    status: CallsTab,
+    calls: StatusTab
 });
 
 const ChatHomeScreen = () => {
@@ -65,12 +63,6 @@ const ChatHomeScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    scene: {
-        flex: 1,
-        borderWidth: 1,
-        borderStyle: "solid",
-        borderColor: "#afb0a3"
     }
 });
 
