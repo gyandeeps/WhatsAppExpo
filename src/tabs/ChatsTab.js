@@ -1,32 +1,27 @@
-import React from "react";
-import { useState } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import ChatList from "../components/chats/ChatList";
+import { useNavigation } from "@react-navigation/native";
+import { GlobalContext } from "../state/GlobalContext";
 
 const ChatsTab = () => {
-    const [chatItems] = useState([
-        {
-            picUrl: "https://avatars.githubusercontent.com/u/5554486",
-            title: "test",
-            id: 1,
-            subTitle:
-                "random message and its a long message i guess asdkn askdas, dn lnlnl",
-            dateTime: new Date("12/5/2019"),
-            mute: true
-        },
-        {
-            picUrl: "https://avatars.githubusercontent.com/u/5554486",
-            title: "jokes",
-            id: 2,
-            subTitle: "random jokes",
-            dateTime: new Date(),
-            mute: false
-        }
-    ]);
+    const navigation = useNavigation();
+    const [{ chatItems }] = useContext(GlobalContext);
+
+    const onChatSelect = (id) => {
+        console.log(chatItems.find((item) => item.id === id));
+        navigation.navigate("Chat", {
+            id
+        });
+    };
 
     return (
         <View style={styles.container}>
-            <ChatList style={styles.chatList} items={chatItems} />
+            <ChatList
+                style={styles.chatList}
+                items={chatItems}
+                onChatSelect={onChatSelect}
+            />
         </View>
     );
 };

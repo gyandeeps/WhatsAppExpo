@@ -28,8 +28,8 @@ const renderTabBar = (props) => (
 const renderScene = SceneMap({
     camera: CameraTab,
     chats: ChatsTab,
-    status: CallsTab,
-    calls: StatusTab
+    status: StatusTab,
+    calls: CallsTab
 });
 
 const ChatHomeScreen = () => {

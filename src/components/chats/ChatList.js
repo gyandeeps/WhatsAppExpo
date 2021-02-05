@@ -3,11 +3,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const ChatList = ({ style, items }) => {
+const ChatList = ({ style, items, onChatSelect }) => {
     return (
         <View style={StyleSheet.compose(styles.container, style)}>
             {items.map((l, i) => (
-                <ListItem key={i} bottomDivider>
+                <ListItem
+                    key={l.id}
+                    bottomDivider
+                    onPress={() => onChatSelect(l.id)}
+                    onClick={() => onChatSelect(l.id)}
+                >
                     <Avatar rounded source={{ uri: l.picUrl }} />
                     <ListItem.Content>
                         <ListItem.Title>{l.title}</ListItem.Title>

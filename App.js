@@ -13,72 +13,102 @@ import { View, StyleSheet, Platform } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
 import SettingsMenu from "./src/components/SettingsMenu";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import ChatScreen from "./src/screens/Chat";
+import { GlobalState } from "./src/state/GlobalContext";
 
 const Stack = createStackNavigator();
 
 const App = () => (
     <SafeAreaProvider>
         <MenuProvider>
-            <NavigationContainer>
-                <Stack.Navigator
-                    headerMode="screen"
-                    initialRouteName="ChatHome"
-                    screenOptions={{
-                        cardOverlayEnabled: false,
-                        headerTitleAlign: "left",
-                        headerStyle: {
-                            backgroundColor: "rgb(0, 150, 136)",
-                            borderBottomWidth: 0
-                        },
-                        headerTitleStyle: {
-                            color: "white"
-                        },
-                        headerStatusBarHeight: Platform.OS === "web" ? 0 : 50
-                    }}
-                >
-                    <Stack.Screen
-                        name="ChatHome"
-                        component={ChatHomeScreen}
-                        options={{
-                            title: "WhatsApp",
-                            headerRight: () => (
-                                <View style={styles.headerRight}>
-                                    <Ionicons
-                                        name="md-search-sharp"
-                                        size={24}
-                                        color="white"
-                                        onPress={() => {}}
-                                        style={styles.icons}
+            <GlobalState>
+                <NavigationContainer>
+                    <Stack.Navigator
+                        initialRouteName="ChatHome"
+                        screenOptions={{
+                            cardOverlayEnabled: false,
+                            headerTitleAlign: "left",
+                            headerStyle: {
+                                backgroundColor: "rgb(0, 150, 136)",
+                                borderBottomWidth: 0
+                            },
+                            headerTitleStyle: {
+                                color: "white"
+                            },
+                            headerLeftContainerStyle: {
+                                color: "white"
+                            },
+                            headerStatusBarHeight:
+                                Platform.OS === "web" ? 0 : 50
+                        }}
+                    >
+                        <Stack.Screen
+                            name="ChatHome"
+                            component={ChatHomeScreen}
+                            options={{
+                                title: "WhatsApp",
+                                headerRight: () => (
+                                    <View style={styles.headerRight}>
+                                        <Ionicons
+                                            name="md-search-sharp"
+                                            size={24}
+                                            color="white"
+                                            onPress={() => {}}
+                                            style={styles.icons}
+                                        />
+                                        <SettingsMenu />
+                                    </View>
+                                )
+                            }}
+                        />
+                        <Stack.Screen
+                            name="Home"
+                            component={HomeScreen}
+                            options={{
+                                title: "Home"
+                            }}
+                        />
+                        <Stack.Screen
+                            name="Chat"
+                            component={ChatScreen}
+                            options={{
+                                title: "Chat",
+                                headerLeft: (props) => (
+                                    <HeaderBackButton
+                                        {...props}
+                                        backImage={() => (
+                                            <Ionicons
+                                                name="arrow-back"
+                                                size={24}
+                                                color="white"
+                                            />
+                                        )}
                                     />
-                                    <SettingsMenu />
-                                </View>
-                            )
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Home"
-                        component={HomeScreen}
-                        options={{
-                            title: "Home"
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Settings"
-                        component={SettingsScreen}
-                        options={{
-                            title: "Settings",
-                            headerLeft: (props) => (
-                                <HeaderBackButton
-                                    {...props}
-                                    onPress={() => {
-                                        // Do something
-                                    }}
-                                />
-                            )
-                        }}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
+                                )
+                            }}
+                        />
+                        <Stack.Screen
+                            name="Settings"
+                            component={SettingsScreen}
+                            options={{
+                                title: "Settings",
+                                headerLeft: (props) => (
+                                    <HeaderBackButton
+                                        {...props}
+                                        backImage={() => (
+                                            <Ionicons
+                                                name="arrow-back"
+                                                size={24}
+                                                color="white"
+                                            />
+                                        )}
+                                    />
+                                )
+                            }}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </GlobalState>
         </MenuProvider>
     </SafeAreaProvider>
 );
