@@ -28,25 +28,35 @@ const initialGlobalState = {
         1: [
             {
                 userId: 1,
-                message: "hi",
-                dateTime: new Date()
+                message:
+                    "This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT",
+                dateTime: new Date(),
+                id: 1,
+                sent: true,
+                received: true
             },
             {
-                userId: 2,
-                message: "bye",
-                dateTime: new Date()
+                userId: 3,
+                message:
+                    "This is a quick reply. Do you love Gifted Chat? (checkbox)",
+                dateTime: new Date(),
+                id: 2
             }
         ],
         2: [
             {
-                userId: 3,
+                userId: 1,
                 message: "hey",
-                dateTime: new Date()
+                dateTime: new Date(),
+                id: 3,
+                sent: true,
+                received: false
             },
             {
                 userId: 2,
                 message: "i am good",
-                dateTime: new Date()
+                dateTime: new Date(),
+                id: 4
             }
         ]
     },

@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "NativeExpo",
-        "slug": "NativeExpo",
+        "name": "WhatsAppExpo",
+        "slug": "WhatsAppExpo",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
