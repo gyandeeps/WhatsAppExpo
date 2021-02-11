@@ -97,8 +97,8 @@ const reducer = (state, { payload, type }) => {
                 chatMessages: {
                     ...state.chatMessages,
                     [payload.id]: [
-                        ...state.chatMessages[payload.id],
-                        payload.message
+                        payload.message,
+                        ...state.chatMessages[payload.id]
                     ]
                 }
             };

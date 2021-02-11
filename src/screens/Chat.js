@@ -1,10 +1,21 @@
 import { HeaderTitle } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, View, ImageBackground, Text } from "react-native";
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Text,
+    TouchableOpacity
+} from "react-native";
 import { GlobalContext } from "../state/GlobalContext";
 import { Avatar } from "react-native-elements";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, Send } from "react-native-gifted-chat";
+import {
+    MaterialCommunityIcons,
+    SimpleLineIcons,
+    FontAwesome
+} from "@expo/vector-icons";
 
 // https://github.com/FaridSafi/react-native-gifted-chat/issues/1875
 // https://github.com/FaridSafi/react-native-gifted-chat
@@ -83,13 +94,23 @@ const convertToGiftedChat = (message, users) => {
     };
 };
 
+const convertFromGiftedChat = (message) => ({
+    userId: message.user._id,
+    message: message.text,
+    dateTime: message.createdAt,
+    id: message._id,
+    sent: false,
+    received: false
+});
+
 const ChatScreen = ({ route, navigation }) => {
-    const { id } = route.params || { id: 2 };
-    const [{ chatItems, chatMessages, users, loggedInUser }] = useContext(
-        GlobalContext
-    );
+    const { id: chatId } = route.params || { id: 2 };
+    const [
+        { chatItems, chatMessages, users, loggedInUser },
+        dispatch
+    ] = useContext(GlobalContext);
     const [messages, setMessages] = useState([]);
-    const chatItem = chatItems.find((c) => id === c.id);
+    const chatItem = chatItems.find((c) => chatId === c.id);
 
     useEffect(() => {
         navigation.setOptions({
@@ -105,15 +126,26 @@ const ChatScreen = ({ route, navigation }) => {
             ),
             title: chatItem.title
         });
-    }, [id]);
+    }, [chatId]);
 
     useEffect(() => {
         setMessages(
-            chatMessages[id].map((message) =>
+            chatMessages[chatId].map((message) =>
                 convertToGiftedChat(message, users)
             )
         );
-    }, [chatMessages, setMessages, id, users]);
+    }, [chatMessages, setMessages, chatId, users]);
+
+    const addChatMessage = (message) =>
+        message.forEach((m) => {
+            dispatch({
+                type: "ADD_CHAT",
+                payload: {
+                    id: chatId,
+                    message: convertFromGiftedChat(m)
+                }
+            });
+        });
 
     return (
         <View style={styles.container}>
@@ -124,20 +156,59 @@ const ChatScreen = ({ route, navigation }) => {
             >
                 <GiftedChat
                     messages={messages}
-                    onSend={() => console.log("send")}
+                    onSend={addChatMessage}
                     user={{
                         _id: loggedInUser.id,
                         name: loggedInUser.name,
                         avatar: loggedInUser.picURL
                     }}
                     renderBubble={renderBubble}
-                    placeholder="Type your message here..."
                     isTyping={false}
-                    // renderSend={renderSend}
+                    renderSend={() => null}
+                    renderActions={() => (
+                        <TouchableOpacity
+                            onPress={() => console.log("emoji pressed")}
+                        >
+                            <SimpleLineIcons
+                                name="emotsmile"
+                                size={24}
+                                color="grey"
+                                style={{ marginLeft: 10 }}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    renderAccessory={(props) => (
+                        <Send {...props}>
+                            <MaterialCommunityIcons
+                                name="send-circle"
+                                size={48}
+                                color="#009688"
+                                style={{
+                                    marginTop: 5,
+                                    marginBottom: 5
+                                }}
+                            />
+                        </Send>
+                    )}
+                    renderSend={() => (
+                        <TouchableOpacity
+                            onPress={() => console.log("camera pressed")}
+                        >
+                            <FontAwesome
+                                name="camera"
+                                size={24}
+                                color="grey"
+                                style={{ marginRight: 10 }}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    containerStyle={styles.inputContainerStyle}
+                    primaryStyle={styles.inputBoxStyle}
                     alwaysShowSend
                     scrollToBottom
                     showUserAvatar={false}
                     renderAvatar={null}
+                    placeholder="Type a message"
                 />
             </ImageBackground>
             <StatusBar style="light" />
@@ -171,6 +242,21 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 10,
         paddingRight: 5
+    },
+    inputContainerStyle: {
+        flexDirection: "row",
+        backgroundColor: "inherit",
+        borderTopWidth: 0,
+        alignItems: "center"
+    },
+    inputBoxStyle: {
+        flex: 1,
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "transparent",
+        borderRadius: 21,
+        margin: 5,
+        alignItems: "center"
     }
 });
 

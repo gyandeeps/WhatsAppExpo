@@ -9,7 +9,6 @@ const ChatsTab = () => {
     const [{ chatItems }] = useContext(GlobalContext);
 
     const onChatSelect = (id) => {
-        console.log(chatItems.find((item) => item.id === id));
         navigation.navigate("Chat", {
             id
         });
