@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import { FontAwesome } from "@expo/vector-icons";
 import ChatsTab from "../tabs/ChatsTab";
 import CallsTab from "../tabs/CallsTab";
@@ -25,13 +25,6 @@ const renderTabBar = (props) => (
     />
 );
 
-const renderScene = SceneMap({
-    camera: CameraTab,
-    chats: ChatsTab,
-    status: StatusTab,
-    calls: CallsTab
-});
-
 const ChatHomeScreen = () => {
     const [index, setIndex] = useState(1);
     const [routes] = useState([
@@ -45,6 +38,21 @@ const ChatHomeScreen = () => {
         { key: "status", title: "STATUS" },
         { key: "calls", title: "CALLS" }
     ]);
+
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case "camera":
+                return <CameraTab active={index === 0} />;
+            case "chats":
+                return <ChatsTab />;
+            case "status":
+                return <StatusTab />;
+            case "calls":
+                return <CallsTab />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <View style={styles.container}>

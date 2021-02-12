@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import Camera from "../components/Camera";
 
-const CameraTab = () => {
+const CameraTab = ({ active }) => {
     return (
         <View style={styles.container}>
-            <Text>CameraTab</Text>
+            {active && <Camera onPicCapture={(data) => console.log(data)} />}
         </View>
     );
 };

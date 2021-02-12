@@ -16,6 +16,7 @@ import {
     SimpleLineIcons,
     FontAwesome
 } from "@expo/vector-icons";
+import Camera from "../components/Camera";
 
 // https://github.com/FaridSafi/react-native-gifted-chat/issues/1875
 // https://github.com/FaridSafi/react-native-gifted-chat
@@ -90,7 +91,8 @@ const convertToGiftedChat = (message, users) => {
         user: {
             _id: userInfo.id,
             name: userInfo.name
-        }
+        },
+        image: message.image
     };
 };
 
@@ -100,7 +102,8 @@ const convertFromGiftedChat = (message) => ({
     dateTime: message.createdAt,
     id: message._id,
     sent: false,
-    received: false
+    received: false,
+    image: null
 });
 
 const ChatScreen = ({ route, navigation }) => {
@@ -110,6 +113,7 @@ const ChatScreen = ({ route, navigation }) => {
         dispatch
     ] = useContext(GlobalContext);
     const [messages, setMessages] = useState([]);
+    const [takePic, changeTakePic] = useState(false);
     const chatItem = chatItems.find((c) => chatId === c.id);
 
     useEffect(() => {
@@ -147,12 +151,42 @@ const ChatScreen = ({ route, navigation }) => {
             });
         });
 
+    const photoCapture = (photo) => {
+        dispatch({
+            type: "ADD_CHAT",
+            payload: {
+                id: chatId,
+                message: {
+                    userId: loggedInUser.id,
+                    message: "",
+                    dateTime: new Date(),
+                    id: GiftedChat.defaultProps.messageIdGenerator(),
+                    sent: false,
+                    received: false,
+                    image: photo.uri
+                }
+            }
+        });
+        changeTakePic(false);
+    };
+
     return (
         <View style={styles.container}>
+            {takePic && (
+                <View style={styles.cameraContainer}>
+                    <Camera
+                        onPicCapture={photoCapture}
+                        onClose={() => changeTakePic(false)}
+                    />
+                </View>
+            )}
             <ImageBackground
                 style={styles.image}
                 imageStyle={styles.imageTarget}
-                source="https://web.whatsapp.com/img/bg-chat-tile-light_04fcacde539c58cca6745483d4858c52.png"
+                source={{
+                    uri:
+                        "https://web.whatsapp.com/img/bg-chat-tile-light_04fcacde539c58cca6745483d4858c52.png"
+                }}
             >
                 <GiftedChat
                     messages={messages}
@@ -191,9 +225,7 @@ const ChatScreen = ({ route, navigation }) => {
                         </Send>
                     )}
                     renderSend={() => (
-                        <TouchableOpacity
-                            onPress={() => console.log("camera pressed")}
-                        >
+                        <TouchableOpacity onPress={() => changeTakePic(true)}>
                             <FontAwesome
                                 name="camera"
                                 size={24}
@@ -245,7 +277,7 @@ const styles = StyleSheet.create({
     },
     inputContainerStyle: {
         flexDirection: "row",
-        backgroundColor: "inherit",
+        backgroundColor: "transparent",
         borderTopWidth: 0,
         alignItems: "center"
     },
@@ -257,6 +289,14 @@ const styles = StyleSheet.create({
         borderRadius: 21,
         margin: 5,
         alignItems: "center"
+    },
+    cameraContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 100,
+        width: "100%",
+        height: "100%"
     }
 });
 

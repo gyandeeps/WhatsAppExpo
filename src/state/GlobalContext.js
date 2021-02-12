@@ -33,14 +33,16 @@ const initialGlobalState = {
                 dateTime: new Date(),
                 id: 1,
                 sent: true,
-                received: true
+                received: true,
+                image: null
             },
             {
                 userId: 3,
                 message:
                     "This is a quick reply. Do you love Gifted Chat? (checkbox)",
                 dateTime: new Date(),
-                id: 2
+                id: 2,
+                image: null
             }
         ],
         2: [
@@ -50,13 +52,15 @@ const initialGlobalState = {
                 dateTime: new Date(),
                 id: 3,
                 sent: true,
-                received: false
+                received: false,
+                image: null
             },
             {
                 userId: 2,
                 message: "i am good",
                 dateTime: new Date(),
-                id: 4
+                id: 4,
+                image: null
             }
         ]
     },
