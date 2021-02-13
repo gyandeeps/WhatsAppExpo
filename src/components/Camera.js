@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ActivityIndicator
+} from "react-native";
 import { Camera } from "expo-camera";
 import * as Permissions from "expo-permissions";
 import { Entypo, Ionicons, AntDesign } from "@expo/vector-icons";
 import CameraPreview from "./CameraPreview";
-import { ActivityIndicator } from "react-native";
+import Modal from "modal-react-native-web";
+import { Overlay } from "react-native-elements";
 
 const CameraComp = ({ onPicCapture, onClose }) => {
     const [hasPermission, setHasPermission] = useState(null);
@@ -28,14 +35,21 @@ const CameraComp = ({ onPicCapture, onClose }) => {
     }
 
     const capturePic = async () => {
-        if (camera.current) {
-            const photo = await camera.current.takePictureAsync();
-            setPhoto(photo);
+        if (camera.current && cameraReady) {
+            camera.current
+                .takePictureAsync()
+                .then(setPhoto)
+                .catch((e) => console.error(e));
         }
     };
 
     return (
-        <View style={styles.container}>
+        <Overlay
+            isVisible
+            ModalComponent={Modal}
+            style={styles.container}
+            fullScreen
+        >
             {!cameraReady && (
                 <ActivityIndicator style={styles.loading} size="large" />
             )}
@@ -62,7 +76,10 @@ const CameraComp = ({ onPicCapture, onClose }) => {
                     </View>
                 )}
                 <View style={styles.footer}>
-                    <TouchableOpacity onPress={capturePic}>
+                    <TouchableOpacity
+                        onPress={capturePic}
+                        disabled={!cameraReady}
+                    >
                         <Entypo name="circle" size={48} color="white" />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -74,6 +91,7 @@ const CameraComp = ({ onPicCapture, onClose }) => {
                                     : Camera.Constants.Type.back
                             );
                         }}
+                        disabled={!cameraReady}
                     >
                         <Ionicons
                             name="camera-reverse"
@@ -83,7 +101,7 @@ const CameraComp = ({ onPicCapture, onClose }) => {
                     </TouchableOpacity>
                 </View>
             </Camera>
-        </View>
+        </Overlay>
     );
 };
 
@@ -93,7 +111,7 @@ const styles = StyleSheet.create({
     },
     camera: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#777373"
     },
     footer: {
         position: "absolute",

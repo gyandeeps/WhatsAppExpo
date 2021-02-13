@@ -39,16 +39,16 @@ const ChatHomeScreen = () => {
         { key: "calls", title: "CALLS" }
     ]);
 
-    const renderScene = ({ route }) => {
+    const renderScene = ({ route, jumpTo }) => {
         switch (route.key) {
             case "camera":
-                return <CameraTab active={index === 0} />;
+                return <CameraTab jumpTo={jumpTo} active={index === 0} />;
             case "chats":
-                return <ChatsTab />;
+                return <ChatsTab jumpTo={jumpTo} />;
             case "status":
-                return <StatusTab />;
+                return <StatusTab jumpTo={jumpTo} />;
             case "calls":
-                return <CallsTab />;
+                return <CallsTab jumpTo={jumpTo} />;
             default:
                 return null;
         }
