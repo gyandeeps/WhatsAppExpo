@@ -8,13 +8,10 @@ import {
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const CameraPreview = ({ photo, onUse, onDismiss, style }) => (
-    <View style={[styles.container, style]}>
-        <ImageBackground
-            source={{ uri: photo && photo.uri }}
-            style={{
-                flex: 1
-            }}
-        />
+    <ImageBackground
+        source={{ uri: photo && photo.uri }}
+        style={[style, styles.container]}
+    >
         <View style={styles.footer}>
             <TouchableOpacity onPress={onDismiss}>
                 <AntDesign name="close" size={48} color="white" />
@@ -27,13 +24,12 @@ const CameraPreview = ({ photo, onUse, onDismiss, style }) => (
                 />
             </TouchableOpacity>
         </View>
-    </View>
+    </ImageBackground>
 );
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "transparent"
+        flex: 1
     },
     footer: {
         position: "absolute",

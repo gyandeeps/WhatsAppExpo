@@ -85,13 +85,8 @@ const initialGlobalState = {
             id: 3
         }
     },
-
-    loggedInUser: {
-        name: "Gyandeep Singh",
-        picUrl: "https://avatars.githubusercontent.com/u/5554486",
-        id: 1,
-        email: ""
-    }
+    loggedInUser: null,
+    loggedIn: false
 };
 
 export const GlobalState = ({ children }) => {

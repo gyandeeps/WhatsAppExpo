@@ -4,7 +4,9 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform,
+    Dimensions
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as Permissions from "expo-permissions";
@@ -46,8 +48,8 @@ const CameraComp = ({ onPicCapture, onClose }) => {
     return (
         <Overlay
             isVisible
-            ModalComponent={Modal}
-            style={styles.container}
+            {...(Platform.OS === "web" ? { ModalComponent: Modal } : null)}
+            overlayStyle={styles.container}
             fullScreen
         >
             {!cameraReady && (
@@ -58,7 +60,15 @@ const CameraComp = ({ onPicCapture, onClose }) => {
                     photo={photo}
                     onUse={onPicCapture}
                     onDismiss={() => setPhoto(null)}
-                    style={styles.cameraPreview}
+                    style={[
+                        styles.cameraPreview,
+                        {
+                            height:
+                                Dimensions.get("window").height -
+                                (Platform.OS !== "web" ? 20 : 0),
+                            width: Dimensions.get("window").width
+                        }
+                    ]}
                 />
             )}
             <Camera
@@ -107,7 +117,9 @@ const CameraComp = ({ onPicCapture, onClose }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "grey",
+        padding: 0
     },
     camera: {
         flex: 1,
@@ -148,8 +160,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 0,
         left: 0,
-        height: "100%",
-        width: "100%",
         zIndex: 5
     }
 });

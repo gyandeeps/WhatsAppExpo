@@ -25,6 +25,7 @@ const Login = ({ onLogin, onSignUp, message }) => {
         >
             {message && <Text>{message}</Text>}
             <TextInput
+                key="Email"
                 placeholder="Email"
                 placeholderTextColor="grey"
                 style={styles.textInput}
@@ -35,6 +36,7 @@ const Login = ({ onLogin, onSignUp, message }) => {
                 autoFocus
             />
             <TextInput
+                key="Password"
                 placeholder="Password"
                 placeholderTextColor="grey"
                 style={styles.textInput}
