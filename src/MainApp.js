@@ -6,7 +6,6 @@ import { GlobalContext } from "./state/GlobalContext";
 
 const MainApp = () => {
     const [{ loggedIn }, dispatch] = useContext(GlobalContext);
-    // setTimeout(() => setLoggedIn(true), 1000); // For dev purpose only
 
     useEffect(() => {
         // SplashScreen.preventAutoHideAsync();

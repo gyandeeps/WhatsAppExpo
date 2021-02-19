@@ -3,27 +3,36 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { GlobalContext } from "../state/GlobalContext";
 import { ListItem, Avatar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const NewGroup = () => {
+    const navigation = useNavigation();
     const [{ users }] = useContext(GlobalContext);
-    const [selectedUsers, updateSelectedUsers] = useState([]);
+    const [selectedUserIds, updateSelectedUsers] = useState([]);
 
-    const userSelect = (id) => updateSelectedUsers([...selectedUsers, id]);
+    const userSelect = (id) => updateSelectedUsers([...selectedUserIds, id]);
     const removeUser = (id) =>
-        updateSelectedUsers(selectedUsers.filter((i) => i !== id));
-    const onCreate = () => console.log("Create group");
+        updateSelectedUsers(selectedUserIds.filter((i) => i !== id));
+    const onCreate = () =>
+        navigation.navigate("GroupName", {
+            selectedUserIds
+        });
 
     return (
         <View style={styles.container}>
-            {selectedUsers.length > 0 && (
+            {selectedUserIds.length > 0 && (
                 <View style={styles.selectedContainer}>
-                    {selectedUsers.map((uId) => (
+                    {selectedUserIds.map((uId) => (
                         <TouchableOpacity
                             key={uId}
                             onPress={() => removeUser(uId)}
                             style={styles.selectedUser}
                         >
-                            <Avatar rounded source={{ uri: users[uId].picUrl }}>
+                            <Avatar
+                                rounded
+                                source={{ uri: users[uId].picUrl }}
+                                size="medium"
+                            >
                                 <Avatar.Accessory
                                     type="material"
                                     iconProps={{
@@ -36,7 +45,7 @@ const NewGroup = () => {
                 </View>
             )}
             {Object.values(users)
-                .filter(({ id }) => !selectedUsers.includes(id))
+                .filter(({ id }) => !selectedUserIds.includes(id))
                 .map((user) => (
                     <ListItem
                         key={user.id}
@@ -52,7 +61,7 @@ const NewGroup = () => {
                     </ListItem>
                 ))}
             <TouchableOpacity
-                disabled={selectedUsers.length === 0}
+                disabled={selectedUserIds.length === 0}
                 style={styles.createAction}
                 onPress={onCreate}
             >
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     selectedUser: {
-        marginRight: 5
+        marginRight: 10
     },
     createAction: {
         backgroundColor: "rgb(0, 150, 136)",

@@ -1,6 +1,32 @@
 const reducer = (state, { payload, type }) => {
     switch (type) {
+        case "ADD_GROUP":
+            return {
+                ...state,
+                chatItems: [
+                    {
+                        picUrl:
+                            "https://avatars.githubusercontent.com/u/5554486",
+                        title: payload.title,
+                        id: payload.id,
+                        subTitle: payload.subTitle,
+                        dateTime: new Date(),
+                        mute: false,
+                        isGroup: true
+                    },
+                    ...state.chatItems
+                ],
+                chatMessages: {
+                    ...state.chatMessages,
+                    [payload.id]: []
+                }
+            };
         case "ADD_CHAT":
+            const chatItem = state.chatItems.find(
+                ({ id }) => id === payload.id
+            );
+
+            chatItem.subTitle = payload.message.message;
             return {
                 ...state,
                 chatMessages: {

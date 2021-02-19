@@ -13,6 +13,7 @@ import { View, StyleSheet, Platform } from "react-native";
 import SettingsMenu from "./components/SettingsMenu";
 import ChatScreen from "./screens/Chat";
 import NewGroupScreen from "./screens/NewGroup";
+import GroupNameScreen from "./screens/GroupName";
 
 const Stack = createStackNavigator();
 
@@ -105,6 +106,25 @@ const LoggedInApp = () => (
                 component={NewGroupScreen}
                 options={{
                     title: "New Group",
+                    headerLeft: (props) => (
+                        <HeaderBackButton
+                            {...props}
+                            backImage={() => (
+                                <Ionicons
+                                    name="arrow-back"
+                                    size={24}
+                                    color="white"
+                                />
+                            )}
+                        />
+                    )
+                }}
+            />
+            <Stack.Screen
+                name="GroupName"
+                component={GroupNameScreen}
+                options={{
+                    title: "Group Name",
                     headerLeft: (props) => (
                         <HeaderBackButton
                             {...props}
