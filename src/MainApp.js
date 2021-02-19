@@ -5,13 +5,24 @@ import UnAuthApp from "./UnAuthApp";
 import { GlobalContext } from "./state/GlobalContext";
 
 const MainApp = () => {
-    const [{ loggedIn }] = useContext(GlobalContext);
+    const [{ loggedIn }, dispatch] = useContext(GlobalContext);
     // setTimeout(() => setLoggedIn(true), 1000); // For dev purpose only
 
     useEffect(() => {
-        SplashScreen.preventAutoHideAsync();
+        // SplashScreen.preventAutoHideAsync();
         // just testing
-        setTimeout(SplashScreen.hideAsync, 1000);
+        // setTimeout(() => {
+        // SplashScreen.hideAsync();
+        // dispatch({
+        //     type: "LOGIN",
+        //     payload: {
+        //         name: "Gyandeep Singh",
+        //         picUrl: "https://avatars.githubusercontent.com/u/5554486",
+        //         id: 1,
+        //         email: "asd"
+        //     }
+        // });
+        // }, 100);
     }, []);
 
     return loggedIn ? <LoggedInApp /> : <UnAuthApp />;

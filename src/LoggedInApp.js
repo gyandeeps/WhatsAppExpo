@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, Platform } from "react-native";
 import SettingsMenu from "./components/SettingsMenu";
 import ChatScreen from "./screens/Chat";
+import NewGroupScreen from "./screens/NewGroup";
 
 const Stack = createStackNavigator();
 
@@ -85,6 +86,25 @@ const LoggedInApp = () => (
                 component={SettingsScreen}
                 options={{
                     title: "Settings",
+                    headerLeft: (props) => (
+                        <HeaderBackButton
+                            {...props}
+                            backImage={() => (
+                                <Ionicons
+                                    name="arrow-back"
+                                    size={24}
+                                    color="white"
+                                />
+                            )}
+                        />
+                    )
+                }}
+            />
+            <Stack.Screen
+                name="NewGroup"
+                component={NewGroupScreen}
+                options={{
+                    title: "New Group",
                     headerLeft: (props) => (
                         <HeaderBackButton
                             {...props}
