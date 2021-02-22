@@ -7,12 +7,13 @@ import {
     ImageBackground
 } from "react-native";
 
-const Login = ({ onLogin, onSignUp, message }) => {
+const SignUp = ({ toLoginPage, onSignup }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
 
-    const isDisabled = email.length < 5 || password.length < 5;
-    const login = () => onLogin(email, password);
+    const isDisabled = email.length < 5 || password.length < 5 || name < 5;
+    const sign = () => onSignup({ email, password, name });
 
     return (
         <ImageBackground
@@ -23,7 +24,17 @@ const Login = ({ onLogin, onSignUp, message }) => {
                     "https://web.whatsapp.com/img/bg-chat-tile-light_04fcacde539c58cca6745483d4858c52.png"
             }}
         >
-            {message && <Text>{message}</Text>}
+            <TextInput
+                key="Name"
+                placeholder="Name"
+                placeholderTextColor="grey"
+                style={styles.textInput}
+                value={name}
+                onChangeText={setName}
+                autoCompleteType="name"
+                autoFocus
+                textContentType="name"
+            />
             <TextInput
                 key="Email"
                 placeholder="Email"
@@ -33,7 +44,6 @@ const Login = ({ onLogin, onSignUp, message }) => {
                 onChangeText={setEmail}
                 autoCompleteType="email"
                 autoCorrect={false}
-                autoFocus
                 keyboardType="email-address"
                 textContentType="emailAddress"
             />
@@ -47,25 +57,26 @@ const Login = ({ onLogin, onSignUp, message }) => {
                 secureTextEntry
                 autoCompleteType="password"
                 autoCorrect={false}
-                textContentType="password"
+                textContentType="newPassword"
+                passwordRules="minlength: 5;"
             />
             <TouchableOpacity
                 style={StyleSheet.compose([
                     styles.button,
                     isDisabled && styles.buttonDisabled
                 ])}
-                onPress={login}
+                onPress={sign}
                 activeOpacity={0.5}
                 disabled={isDisabled}
             >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={onSignUp}
+                onPress={toLoginPage}
                 activeOpacity={0.5}
             >
-                <Text style={styles.buttonText}>Sign Up</Text>
+                <Text style={styles.buttonText}>Login Page</Text>
             </TouchableOpacity>
         </ImageBackground>
     );
@@ -74,7 +85,7 @@ const Login = ({ onLogin, onSignUp, message }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "rgb(0, 150, 136)",
+        backgroundColor: "#4aa79ea3",
         color: "white",
         display: "flex",
         flexDirection: "column",
@@ -106,7 +117,7 @@ const styles = StyleSheet.create({
         padding: 5,
         margin: 5,
         color: "white",
-        backgroundColor: "#0a675e",
+        backgroundColor: "#1c8c81",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -122,4 +133,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default SignUp;

@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Login from "./components/Login";
+import SignUp from "./components/SignUp";
 import { GlobalContext } from "./state/GlobalContext";
 
 const UnAuthApp = () => {
     const [_, dispatch] = useContext(GlobalContext);
+    const [showSignup, changeShowSignup] = useState(false);
 
     const onLogin = (email, password) => {
         dispatch({
@@ -17,13 +19,20 @@ const UnAuthApp = () => {
             }
         });
     };
-    const onSignUp = () => {
-        console.log("signup");
+    const onSignUp = () => changeShowSignup(true);
+    const toLoginPage = () => changeShowSignup(false);
+
+    const onSignup = (userObj) => {
+        console.log(userObj);
     };
 
     return (
         <View style={styles.container}>
-            <Login onLogin={onLogin} onSignUp={onSignUp} />
+            {showSignup ? (
+                <SignUp toLoginPage={toLoginPage} onSignup={onSignup} />
+            ) : (
+                <Login onLogin={onLogin} onSignUp={onSignUp} />
+            )}
         </View>
     );
 };
