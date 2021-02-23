@@ -1,37 +1,39 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import { GlobalContext } from "./state/GlobalContext";
+import { firebaseAuth } from "./firebase";
 
 const UnAuthApp = () => {
-    const [_, dispatch] = useContext(GlobalContext);
     const [showSignup, changeShowSignup] = useState(false);
 
-    const onLogin = (email, password) => {
-        dispatch({
-            type: "LOGIN",
-            payload: {
-                name: "Gyandeep Singh",
-                picUrl: "https://avatars.githubusercontent.com/u/5554486",
-                id: 1,
-                email
-            }
-        });
-    };
-    const onSignUp = () => changeShowSignup(true);
-    const toLoginPage = () => changeShowSignup(false);
+    const onLogin = (email, password) =>
+        firebaseAuth
+            .signInWithEmailAndPassword(email, password)
+            .catch((err) => console.error(err));
 
-    const onSignup = (userObj) => {
-        console.log(userObj);
-    };
+    const onSignUp = ({ email, password, name }) =>
+        firebaseAuth
+            .createUserWithEmailAndPassword(email, password)
+            .then(
+                ({ user }) =>
+                    user.updateProfile({
+                        displayName: name
+                    })
+
+                // TODO - add the name to our global state
+            )
+            .catch((err) => console.error(err));
+
+    const toLoginPage = () => changeShowSignup(false);
+    const goToSignUp = () => changeShowSignup(true);
 
     return (
         <View style={styles.container}>
             {showSignup ? (
-                <SignUp toLoginPage={toLoginPage} onSignup={onSignup} />
+                <SignUp toLoginPage={toLoginPage} onSignUp={onSignUp} />
             ) : (
-                <Login onLogin={onLogin} onSignUp={onSignUp} />
+                <Login onLogin={onLogin} goToSignUp={goToSignUp} />
             )}
         </View>
     );

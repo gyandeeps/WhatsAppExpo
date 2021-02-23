@@ -13,7 +13,9 @@
     "@react-navigation/stack": "^5.14.2",
     "expo": "~40.0.0",
     "expo-camera": "~9.1.0",
+    "expo-splash-screen": "~0.8.1",
     "expo-status-bar": "~1.0.3",
+    "firebase": "^8.2.9",
     "modal-react-native-web": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -26,8 +28,7 @@
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
     "react-native-tab-view": "^2.15.2",
-    "react-native-web": "~0.13.12",
-    "expo-splash-screen": "~0.8.1"
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

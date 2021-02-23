@@ -3,25 +3,30 @@ import * as SplashScreen from "expo-splash-screen";
 import LoggedInApp from "./LoggedInApp";
 import UnAuthApp from "./UnAuthApp";
 import { GlobalContext } from "./state/GlobalContext";
+import { firebaseAuth } from "./firebase";
 
 const MainApp = () => {
     const [{ loggedIn }, dispatch] = useContext(GlobalContext);
 
     useEffect(() => {
-        // SplashScreen.preventAutoHideAsync();
-        // just testing
-        // setTimeout(() => {
-        // SplashScreen.hideAsync();
-        // dispatch({
-        //     type: "LOGIN",
-        //     payload: {
-        //         name: "Gyandeep Singh",
-        //         picUrl: "https://avatars.githubusercontent.com/u/5554486",
-        //         id: 1,
-        //         email: "asd"
-        //     }
-        // });
-        // }, 100);
+        SplashScreen.preventAutoHideAsync();
+
+        return firebaseAuth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+                dispatch({
+                    type: "LOGIN",
+                    payload: {
+                        name: authUser.displayName,
+                        picUrl:
+                            authUser.photoURL ||
+                            "https://avatars.githubusercontent.com/u/5554486",
+                        id: authUser.uid,
+                        email: authUser.email
+                    }
+                });
+                SplashScreen.hideAsync();
+            }
+        });
     }, []);
 
     return loggedIn ? <LoggedInApp /> : <UnAuthApp />;

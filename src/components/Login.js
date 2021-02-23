@@ -7,7 +7,7 @@ import {
     ImageBackground
 } from "react-native";
 
-const Login = ({ onLogin, onSignUp, message }) => {
+const Login = ({ onLogin, goToSignUp, message }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -62,7 +62,7 @@ const Login = ({ onLogin, onSignUp, message }) => {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={onSignUp}
+                onPress={goToSignUp}
                 activeOpacity={0.5}
             >
                 <Text style={styles.buttonText}>Sign Up</Text>

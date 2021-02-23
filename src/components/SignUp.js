@@ -7,13 +7,13 @@ import {
     ImageBackground
 } from "react-native";
 
-const SignUp = ({ toLoginPage, onSignup }) => {
+const SignUp = ({ toLoginPage, onSignUp }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
 
     const isDisabled = email.length < 5 || password.length < 5 || name < 5;
-    const sign = () => onSignup({ email, password, name });
+    const sign = () => onSignUp({ email, password, name });
 
     return (
         <ImageBackground
@@ -59,6 +59,7 @@ const SignUp = ({ toLoginPage, onSignup }) => {
                 autoCorrect={false}
                 textContentType="newPassword"
                 passwordRules="minlength: 5;"
+                onSubmitEditing={sign}
             />
             <TouchableOpacity
                 style={StyleSheet.compose([
