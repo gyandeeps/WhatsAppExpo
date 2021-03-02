@@ -28,7 +28,7 @@ const initialGlobalState = {
     chatMessages: {
         1: [
             {
-                userId: 1,
+                userId: 2,
                 message:
                     "This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT",
                 dateTime: new Date(),
@@ -48,7 +48,7 @@ const initialGlobalState = {
         ],
         2: [
             {
-                userId: 1,
+                userId: 2,
                 message: "hey",
                 dateTime: new Date(),
                 id: 3,
@@ -66,12 +66,6 @@ const initialGlobalState = {
         ]
     },
     users: {
-        1: {
-            name: "Gyandeep Singh",
-            picUrl: "https://avatars.githubusercontent.com/u/5554486",
-            email: "",
-            id: 1
-        },
         2: {
             name: "Gaurav Singh",
             picUrl: "https://avatars.githubusercontent.com/u/5594486",

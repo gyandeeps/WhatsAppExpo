@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 import LoggedInApp from "./LoggedInApp";
 import UnAuthApp from "./UnAuthApp";
 import { GlobalContext } from "./state/GlobalContext";
@@ -9,7 +9,7 @@ const MainApp = () => {
     const [{ loggedIn }, dispatch] = useContext(GlobalContext);
 
     useEffect(() => {
-        SplashScreen.preventAutoHideAsync();
+        // SplashScreen.preventAutoHideAsync();
 
         return firebaseAuth.onAuthStateChanged((authUser) => {
             if (authUser) {
@@ -24,7 +24,7 @@ const MainApp = () => {
                         email: authUser.email
                     }
                 });
-                SplashScreen.hideAsync();
+                // setTimeout(SplashScreen.hideAsync, 1000);
             }
         });
     }, []);

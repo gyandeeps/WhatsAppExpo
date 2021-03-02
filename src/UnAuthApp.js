@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import { firebaseAuth } from "./firebase";
+import {
+    addUser,
+    createUserWithEmailAndPassword,
+    logIn
+} from "./firebase/users";
+import { GlobalContext } from "./state/GlobalContext";
 
 const UnAuthApp = () => {
     const [showSignup, changeShowSignup] = useState(false);
-
-    const onLogin = (email, password) =>
-        firebaseAuth
-            .signInWithEmailAndPassword(email, password)
-            .catch((err) => console.error(err));
+    const [_, dispatch] = useContext(GlobalContext);
 
     const onSignUp = ({ email, password, name }) =>
-        firebaseAuth
-            .createUserWithEmailAndPassword(email, password)
-            .then(
-                ({ user }) =>
-                    user.updateProfile({
-                        displayName: name
-                    })
+        createUserWithEmailAndPassword(email, password, name)
+            .then(({ displayName, user }) => {
+                dispatch({
+                    type: "LOGGED_USER_NAME",
+                    payload: displayName
+                });
 
-                // TODO - add the name to our global state
-            )
+                return addUser(user.uid, displayName, email);
+            })
             .catch((err) => console.error(err));
 
     const toLoginPage = () => changeShowSignup(false);
@@ -33,7 +33,7 @@ const UnAuthApp = () => {
             {showSignup ? (
                 <SignUp toLoginPage={toLoginPage} onSignUp={onSignUp} />
             ) : (
-                <Login onLogin={onLogin} goToSignUp={goToSignUp} />
+                <Login onLogin={logIn} goToSignUp={goToSignUp} />
             )}
         </View>
     );

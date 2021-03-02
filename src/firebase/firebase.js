@@ -12,3 +12,4 @@ const app =
 export const firebaseDb = app.firestore();
 export const firebaseAuth = app.auth();
 export const firebaseStorage = app.storage().ref();
+export const firestore = firebase.firestore;

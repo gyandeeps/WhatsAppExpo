@@ -56,14 +56,27 @@ const reducer = (state, { payload, type }) => {
         case "LOGIN":
             return {
                 ...state,
+                users: {
+                    ...state.users,
+                    [payload.id]: payload
+                },
                 loggedInUser: payload,
                 loggedIn: true
             };
+
         case "LOG_OUT":
             return {
                 ...state,
                 loggedInUser: null,
                 loggedIn: false
+            };
+        case "LOGGED_USER_NAME":
+            return {
+                ...state,
+                loggedInUser: {
+                    ...state.loggedInUser,
+                    name: payload
+                }
             };
 
         default:
