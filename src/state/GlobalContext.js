@@ -1,9 +1,10 @@
 import React, { createContext, useReducer } from "react";
+import { NETWORK_STATUS } from "./hooks";
 import reducer from "./reducer";
 
 export const GlobalContext = createContext([{}, function () {}]);
 
-const initialGlobalState = {
+const initialGlobalState1 = {
     chatItems: [
         {
             picUrl: "https://avatars.githubusercontent.com/u/5554486",
@@ -80,7 +81,23 @@ const initialGlobalState = {
         }
     },
     loggedInUser: null,
-    loggedIn: false
+    loggedIn: false,
+    networkStatus: {
+        users: NETWORK_STATUS.IDLE,
+        groups: NETWORK_STATUS.IDLE
+    }
+};
+
+const initialGlobalState = {
+    chatItems: [],
+    chatMessages: {},
+    users: {},
+    loggedInUser: null,
+    loggedIn: false,
+    networkStatus: {
+        users: NETWORK_STATUS.IDLE,
+        groups: NETWORK_STATUS.IDLE
+    }
 };
 
 export const GlobalState = ({ children }) => {

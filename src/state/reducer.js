@@ -1,3 +1,5 @@
+import { NETWORK_STATUS } from "./hooks";
+
 const reducer = (state, { payload, type }) => {
     switch (type) {
         case "ADD_GROUP":
@@ -76,6 +78,73 @@ const reducer = (state, { payload, type }) => {
                 loggedInUser: {
                     ...state.loggedInUser,
                     name: payload
+                }
+            };
+        case "REQUEST_INFLIGHT":
+            return {
+                ...state,
+                networkStatus: {
+                    ...state.networkStatus,
+                    [payload]: NETWORK_STATUS.IN_FLIGHT
+                }
+            };
+
+        case "USERS_DATA":
+            return {
+                ...state,
+                users: payload.reduce(
+                    (coll, usr) => ({ ...coll, [usr.id]: usr }),
+                    {}
+                ),
+                networkStatus: {
+                    ...state.networkStatus,
+                    users: NETWORK_STATUS.SUCCESS
+                }
+            };
+
+        case "GROUPS_DATA":
+            const { chatItems, chatMessages } = payload.reduce(
+                (coll, groupData) => {
+                    coll.chatItems.push({
+                        picUrl:
+                            "https://avatars.githubusercontent.com/u/5554486",
+                        title: groupData.name,
+                        id: groupData.id,
+                        subTitle:
+                            groupData.messages.length > 0
+                                ? groupData.messages[0].text
+                                : "",
+                        dateTime: new Date(groupData.updated),
+                        mute: false,
+                        isGroup: true
+                    });
+
+                    coll.chatMessages[groupData.id] = groupData.messages.map(
+                        (msg) => ({
+                            userId: msg.userId,
+                            message: msg.text,
+                            dateTime: new Date(msg.updated),
+                            id: msg.id,
+                            sent: true,
+                            received: true,
+                            image: null
+                        })
+                    );
+
+                    return coll;
+                },
+                {
+                    chatItems: [],
+                    chatMessages: {}
+                }
+            );
+            return {
+                ...state,
+                chatItems,
+                chatMessages,
+                networkStatus: {
+                    ...state.networkStatus,
+                    groups: NETWORK_STATUS.SUCCESS
                 }
             };
 

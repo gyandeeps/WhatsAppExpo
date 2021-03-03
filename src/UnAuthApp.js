@@ -15,13 +15,13 @@ const UnAuthApp = () => {
 
     const onSignUp = ({ email, password, name }) =>
         createUserWithEmailAndPassword(email, password, name)
-            .then(({ displayName, user }) => {
+            .then(({ name, user }) => {
                 dispatch({
                     type: "LOGGED_USER_NAME",
-                    payload: displayName
+                    payload: name
                 });
 
-                return addUser(user.uid, displayName, email);
+                return addUser(user.uid, name, email);
             })
             .catch((err) => console.error(err));
 

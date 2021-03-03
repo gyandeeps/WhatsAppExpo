@@ -3,7 +3,8 @@ import React, { useContext, useEffect } from "react";
 import LoggedInApp from "./LoggedInApp";
 import UnAuthApp from "./UnAuthApp";
 import { GlobalContext } from "./state/GlobalContext";
-import { firebaseAuth } from "./firebase";
+import { firebaseAuth } from "./firebase/firebase";
+import { getAllUser } from "./firebase/users";
 
 const MainApp = () => {
     const [{ loggedIn }, dispatch] = useContext(GlobalContext);
@@ -13,6 +14,12 @@ const MainApp = () => {
 
         return firebaseAuth.onAuthStateChanged((authUser) => {
             if (authUser) {
+                getAllUser().then((users) => {
+                    dispatch({
+                        type: "USERS_DATA",
+                        payload: users
+                    });
+                });
                 dispatch({
                     type: "LOGIN",
                     payload: {
