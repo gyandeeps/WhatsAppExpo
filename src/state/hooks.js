@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { getGroupsById } from "../firebase/groups";
+import { getMessagesByGroupId } from "../firebase/messages";
 import { getUserGroups } from "../firebase/users";
 import { GlobalContext } from "./GlobalContext";
 
@@ -31,10 +32,45 @@ export const useChatItems = () => {
                     });
                 })
                 .catch((err) => {
+                    dispatch({
+                        type: "REQUEST_FAIL",
+                        payload: "groups"
+                    });
                     console.error(err);
                 });
         }
     }, [dispatch, networkStatus.groups, loggedInUser]);
 
     return chatItems;
+};
+
+export const useMessages = (groupId) => {
+    const [{ chatMessages }, dispatch] = useContext(GlobalContext);
+
+    useEffect(() => {
+        dispatch({
+            type: "REQUEST_INFLIGHT",
+            payload: "messages"
+        });
+
+        getMessagesByGroupId(groupId)
+            .then((messageData) => {
+                dispatch({
+                    type: "MESSAGES_DATA",
+                    payload: {
+                        messageData,
+                        groupId
+                    }
+                });
+            })
+            .catch((err) => {
+                dispatch({
+                    type: "REQUEST_FAIL",
+                    payload: "messages"
+                });
+                console.error(err);
+            });
+    }, [dispatch, groupId]);
+
+    return chatMessages;
 };

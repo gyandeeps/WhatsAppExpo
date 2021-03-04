@@ -3,7 +3,9 @@ import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { GlobalContext } from "../state/GlobalContext";
 import { Avatar, Input } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
-import { GiftedChat } from "react-native-gifted-chat";
+import { createGroup } from "../firebase/groups";
+import { createGroupMessage } from "../firebase/messages";
+import { addToGroup } from "../firebase/users";
 
 const GroupName = ({ route, navigation }) => {
     const { selectedUserIds } = route.params;
@@ -13,15 +15,19 @@ const GroupName = ({ route, navigation }) => {
     const [height, setHeight] = useState(0);
 
     const onCreate = () => {
-        dispatch({
-            type: "ADD_GROUP",
-            payload: {
-                id: GiftedChat.defaultProps.messageIdGenerator(),
-                title,
-                subTitle: ""
-            }
+        createGroup(title, selectedUserIds).then((groupId) => {
+            createGroupMessage(groupId);
+            selectedUserIds.map((userId) => addToGroup(groupId, userId));
+            dispatch({
+                type: "ADD_GROUP",
+                payload: {
+                    id: groupId,
+                    title,
+                    subTitle: ""
+                }
+            });
+            navigation.navigate("ChatHome");
         });
-        navigation.navigate("ChatHome");
     };
 
     useLayoutEffect(() => {

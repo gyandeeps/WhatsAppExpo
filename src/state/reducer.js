@@ -89,6 +89,15 @@ const reducer = (state, { payload, type }) => {
                 }
             };
 
+        case "REQUEST_FAIL":
+            return {
+                ...state,
+                networkStatus: {
+                    ...state.networkStatus,
+                    [payload]: NETWORK_STATUS.FAILED
+                }
+            };
+
         case "USERS_DATA":
             return {
                 ...state,
@@ -103,48 +112,44 @@ const reducer = (state, { payload, type }) => {
             };
 
         case "GROUPS_DATA":
-            const { chatItems, chatMessages } = payload.reduce(
-                (coll, groupData) => {
-                    coll.chatItems.push({
+            return {
+                ...state,
+                chatItems: payload.reduce((coll, groupData) => {
+                    coll.push({
                         picUrl:
                             "https://avatars.githubusercontent.com/u/5554486",
                         title: groupData.name,
                         id: groupData.id,
-                        subTitle:
-                            groupData.messages.length > 0
-                                ? groupData.messages[0].text
-                                : "",
-                        dateTime: new Date(groupData.updated),
+                        subTitle: "",
+                        dateTime: new Date(groupData.updated.toDate()),
                         mute: false,
                         isGroup: true
                     });
 
-                    coll.chatMessages[groupData.id] = groupData.messages.map(
-                        (msg) => ({
-                            userId: msg.userId,
-                            message: msg.text,
-                            dateTime: new Date(msg.updated),
-                            id: msg.id,
-                            sent: true,
-                            received: true,
-                            image: null
-                        })
-                    );
-
                     return coll;
-                },
-                {
-                    chatItems: [],
-                    chatMessages: {}
-                }
-            );
-            return {
-                ...state,
-                chatItems,
-                chatMessages,
+                }, []),
                 networkStatus: {
                     ...state.networkStatus,
                     groups: NETWORK_STATUS.SUCCESS
+                }
+            };
+
+        case "MESSAGES_DATA":
+            return {
+                ...state,
+                chatMessages: {
+                    ...state.chatMessages,
+                    [payload.groupId]: payload.messageData.map((msg) => ({
+                        ...msg,
+                        dateTime: new Date(msg.updated.toDate()),
+                        sent: true,
+                        received: true,
+                        image: null
+                    }))
+                },
+                networkStatus: {
+                    ...state.networkStatus,
+                    messages: NETWORK_STATUS.SUCCESS
                 }
             };
 

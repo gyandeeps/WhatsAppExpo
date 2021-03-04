@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const ChatList = ({ style, items, onChatSelect }) => {
     return (
         <View style={StyleSheet.compose(styles.container, style)}>
-            {items.map((l, i) => (
+            {items.map((l) => (
                 <ListItem
                     key={l.id}
                     bottomDivider

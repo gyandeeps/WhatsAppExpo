@@ -17,6 +17,8 @@ import {
     FontAwesome
 } from "@expo/vector-icons";
 import Camera from "../components/Camera";
+import { useChatItems, useMessages } from "../state/hooks";
+import { addMessage } from "../firebase/messages";
 
 // https://github.com/FaridSafi/react-native-gifted-chat/issues/1875
 // https://github.com/FaridSafi/react-native-gifted-chat
@@ -108,45 +110,55 @@ const convertFromGiftedChat = (message) => ({
 
 const ChatScreen = ({ route, navigation }) => {
     const { id: chatId } = route.params || { id: 2 };
-    const [
-        { chatItems, chatMessages, users, loggedInUser },
-        dispatch
-    ] = useContext(GlobalContext);
+    const [{ users, loggedInUser }, dispatch] = useContext(GlobalContext);
     const [messages, setMessages] = useState([]);
     const [takePic, changeTakePic] = useState(false);
+    const chatItems = useChatItems();
+    const chatMessages = useMessages(chatId);
     const chatItem = chatItems.find((c) => chatId === c.id);
 
     useEffect(() => {
-        navigation.setOptions({
-            headerTitle: ({ children, ...props }) => (
-                <View style={styles.headerView}>
-                    <Avatar
-                        containerStyle={styles.headerAvatar}
-                        rounded
-                        source={{ uri: chatItem.picUrl }}
-                    />
-                    <HeaderTitle {...props}>{chatItem.title}</HeaderTitle>
-                </View>
-            ),
-            title: chatItem.title
-        });
-    }, [chatId]);
+        if (chatItem) {
+            navigation.setOptions({
+                headerTitle: ({ children, ...props }) => (
+                    <View style={styles.headerView}>
+                        <Avatar
+                            containerStyle={styles.headerAvatar}
+                            rounded
+                            source={{ uri: chatItem.picUrl }}
+                        />
+                        <HeaderTitle {...props}>{chatItem.title}</HeaderTitle>
+                    </View>
+                ),
+                title: chatItem.title
+            });
+        }
+    }, [chatId, chatItem]);
 
     useEffect(() => {
-        setMessages(
-            chatMessages[chatId].map((message) =>
-                convertToGiftedChat(message, users)
-            )
-        );
+        if (chatMessages[chatId]) {
+            setMessages(
+                chatMessages[chatId].map((message) =>
+                    convertToGiftedChat(message, users)
+                )
+            );
+        }
     }, [chatMessages, setMessages, chatId, users]);
 
     const addChatMessage = (message) =>
         message.forEach((m) => {
+            const msg = convertFromGiftedChat(m);
+            addMessage(chatId, {
+                message: msg.message,
+                userId: msg.userId
+            }).catch((err) => {
+                console.error(err);
+            });
             dispatch({
                 type: "ADD_CHAT",
                 payload: {
                     id: chatId,
-                    message: convertFromGiftedChat(m)
+                    message: msg
                 }
             });
         });

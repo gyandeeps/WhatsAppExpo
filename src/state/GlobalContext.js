@@ -84,6 +84,7 @@ const initialGlobalState1 = {
     loggedIn: false,
     networkStatus: {
         users: NETWORK_STATUS.IDLE,
+        messages: NETWORK_STATUS.IDLE,
         groups: NETWORK_STATUS.IDLE
     }
 };
@@ -96,6 +97,7 @@ const initialGlobalState = {
     loggedIn: false,
     networkStatus: {
         users: NETWORK_STATUS.IDLE,
+        messages: NETWORK_STATUS.IDLE,
         groups: NETWORK_STATUS.IDLE
     }
 };

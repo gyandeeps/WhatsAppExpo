@@ -1,34 +1,14 @@
 import { firebaseDb, firestore } from "./firebase";
 
-export const createGroup = (name) =>
+export const createGroup = (name, users) =>
     firebaseDb
         .collection("groups")
         .add({
             name,
-            messages: [],
-            users: [],
+            users,
             updated: firestore.FieldValue.serverTimestamp()
         })
         .then(({ id }) => id);
-
-/**
- * Add a message
- * @param {string} groupId
- * @param {{text: string, userId: string, id: string}} message
- */
-export const addMessage = (groupId, message) =>
-    firebaseDb
-        .collection("groups")
-        .doc(groupId)
-        .update({
-            updated: firestore.FieldValue.serverTimestamp(),
-            messages: firestore.FieldValue.arrayUnion([
-                {
-                    ...message,
-                    updated: firestore.FieldValue.serverTimestamp()
-                }
-            ])
-        });
 
 /**
  * Add users
@@ -41,11 +21,15 @@ export const addUsers = (groupId, userIds) =>
         .doc(groupId)
         .update({
             updated: firestore.FieldValue.serverTimestamp(),
-            userIds: firestore.FieldValue.arrayUnion(userIds)
+            userIds: firestore.FieldValue.arrayUnion(...userIds)
         });
 
-export const getGroupsById = (groupIds) =>
-    firebaseDb
+export const getGroupsById = (groupIds) => {
+    if (groupIds.length === 0) {
+        return [];
+    }
+
+    return firebaseDb
         .collection("groups")
         .where(firestore.FieldPath.documentId(), "in", groupIds)
         .get()
@@ -54,3 +38,4 @@ export const getGroupsById = (groupIds) =>
             doc.forEach((grp) => groups.push({ ...grp.data(), id: grp.id }));
             return groups;
         });
+};

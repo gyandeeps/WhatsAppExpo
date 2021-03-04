@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import ChatList from "../components/chats/ChatList";
 import { useNavigation } from "@react-navigation/native";
-import { GlobalContext } from "../state/GlobalContext";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useChatItems } from "../state/hooks";
 
 const ChatsTab = () => {
     const navigation = useNavigation();
-    const [{ chatItems }] = useContext(GlobalContext);
+    const chatItems = useChatItems();
 
     const onChatSelect = (id) => {
         navigation.navigate("Chat", {

@@ -38,7 +38,10 @@ export const addToGroup = (groupId, userId) =>
         .doc(userId)
         .update({
             updated: firestore.FieldValue.serverTimestamp(),
-            userIds: firestore.FieldValue.arrayUnion([groupId])
+            groups: firestore.FieldValue.arrayUnion(groupId)
+        })
+        .catch((err) => {
+            console.error(err);
         });
 
 export const getUserGroups = (userId) =>
