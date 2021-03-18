@@ -154,13 +154,6 @@ const ChatScreen = ({ route, navigation }) => {
             }).catch((err) => {
                 console.error(err);
             });
-            dispatch({
-                type: "ADD_CHAT",
-                payload: {
-                    id: chatId,
-                    message: msg
-                }
-            });
         });
 
     const photoCapture = (photo) => {

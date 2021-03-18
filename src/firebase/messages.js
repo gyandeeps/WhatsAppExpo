@@ -34,3 +34,17 @@ export const getMessagesByGroupId = (groupId) =>
             });
             return messages;
         });
+
+export const listenForGroupMessages = (groupId, func) =>
+    firebaseDb
+        .collection(`messages/${groupId}/messages`)
+        .orderBy("updated", "desc")
+        .onSnapshot((snapshot) => {
+            if (!snapshot.metadata.hasPendingWrites) {
+                func(
+                    snapshot
+                        .docChanges()
+                        .map(({ doc }) => ({ ...doc.data(), id: doc.id }))
+                );
+            }
+        });

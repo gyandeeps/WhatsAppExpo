@@ -1,6 +1,9 @@
 import { useContext, useEffect } from "react";
 import { getGroupsById } from "../firebase/groups";
-import { getMessagesByGroupId } from "../firebase/messages";
+import {
+    getMessagesByGroupId,
+    listenForGroupMessages
+} from "../firebase/messages";
 import { getUserGroups } from "../firebase/users";
 import { GlobalContext } from "./GlobalContext";
 
@@ -53,23 +56,34 @@ export const useMessages = (groupId) => {
             payload: "messages"
         });
 
-        getMessagesByGroupId(groupId)
-            .then((messageData) => {
-                dispatch({
-                    type: "MESSAGES_DATA",
-                    payload: {
-                        messageData,
-                        groupId
-                    }
-                });
-            })
-            .catch((err) => {
-                dispatch({
-                    type: "REQUEST_FAIL",
-                    payload: "messages"
-                });
-                console.error(err);
+        // getMessagesByGroupId(groupId)
+        //     .then((messageData) => {
+        //         dispatch({
+        //             type: "MESSAGES_DATA",
+        //             payload: {
+        //                 messageData,
+        //                 groupId
+        //             }
+        //         });
+        //     })
+        //     .catch((err) => {
+        //         dispatch({
+        //             type: "REQUEST_FAIL",
+        //             payload: "messages"
+        //         });
+        //         console.error(err);
+        //     });
+
+        return listenForGroupMessages(groupId, (messageData) => {
+            // console.log(messageData);
+            dispatch({
+                type: "MESSAGES_DATA",
+                payload: {
+                    messageData,
+                    groupId
+                }
             });
+        });
     }, [dispatch, groupId]);
 
     return chatMessages;

@@ -139,13 +139,16 @@ const reducer = (state, { payload, type }) => {
                 ...state,
                 chatMessages: {
                     ...state.chatMessages,
-                    [payload.groupId]: payload.messageData.map((msg) => ({
-                        ...msg,
-                        dateTime: new Date(msg.updated.toDate()),
-                        sent: true,
-                        received: true,
-                        image: null
-                    }))
+                    [payload.groupId]: [
+                        ...payload.messageData.map((msg) => ({
+                            ...msg,
+                            dateTime: new Date(msg.updated.toDate()),
+                            sent: true,
+                            received: true,
+                            image: null
+                        })),
+                        ...(state.chatMessages[payload.groupId] || [])
+                    ]
                 },
                 networkStatus: {
                     ...state.networkStatus,
